@@ -3,7 +3,7 @@ services:
   app:
     container_name: dramatiq_app
     build: .
-    restart: always
+    restart: never
     depends_on:
       - worker
       - rabbitmq
