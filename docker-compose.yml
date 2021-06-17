@@ -1,0 +1,26 @@
+version: "3"
+services:
+  app:
+    container_name: dramatiq_app
+    build: .
+    restart: always
+    depends_on:
+      - worker
+      - rabbitmq
+    command: ["./wait-for-it.sh", "rabbitmq:15672", "--", "python", "app.py"]
+  worker:
+    container_name: dramatiq_worker
+    build: .
+    restart: always
+    command: [dramatiq, app]
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:management-alpine
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: rabbit
+    ports:
+      - 5672:5672
+      - 15672:15672
